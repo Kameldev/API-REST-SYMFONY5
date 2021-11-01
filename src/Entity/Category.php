@@ -25,7 +25,7 @@ class Category
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Annonce::class, mappedBy="relation")
+     * @ORM\OneToMany(targetEntity=Annonce::class, mappedBy="category")
      */
     private $annonces;
 
@@ -70,7 +70,7 @@ class Category
     {
         if (!$this->annonces->contains($annonce)) {
             $this->annonces[] = $annonce;
-            $annonce->setRelation($this);
+            $annonce->setCategory($this);
         }
 
         return $this;
@@ -80,8 +80,8 @@ class Category
     {
         if ($this->annonces->removeElement($annonce)) {
             // set the owning side to null (unless already changed)
-            if ($annonce->getRelation() === $this) {
-                $annonce->setRelation(null);
+            if ($annonce->getCategory() === $this) {
+                $annonce->setCategory(null);
             }
         }
 
