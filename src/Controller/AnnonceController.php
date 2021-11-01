@@ -18,10 +18,10 @@ class AnnonceController extends AbstractFOSRestController
     /**
      * @return Response
      */
-    public function cgetCategoriesAction(){
+    public function cgetAnnoncesAction(){
         $em = $this->getDoctrine()->getManager();
-        $categories = $em->getRepository(Category::class)->findAll();
-        $view = $this->view($categories, Response::HTTP_OK , []);
+        $annonces = $em->getRepository(Annonce::class)->findAll();
+        $view = $this->view($annonces, Response::HTTP_OK , []);
         return $this->handleView($view);
     }
 
