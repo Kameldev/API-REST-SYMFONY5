@@ -13,8 +13,8 @@ class MarquesFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $categorie = $manager->getRepository('App\Entity\Category')->find(5);
-
+        $repository = $manager->getRepository(Category::class);
+        $categorie = $repository->findOneBy(['name' => 'Automobile']);
         $marques = [
             [
                 'name' => 'Audi',
@@ -31,8 +31,8 @@ class MarquesFixtures extends Fixture
         foreach ($marques as $marque) {
             $m = new Marque();
             $m->setName($marque['name']);
+            $m->setCategory($categorie);
             $manager->persist($m);
-            $m->setCategory($this->getReference($m));
             $manager->flush();
 
         }
