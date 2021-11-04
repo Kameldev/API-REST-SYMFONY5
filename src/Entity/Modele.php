@@ -28,6 +28,11 @@ class Modele
      */
     private $marque;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $canonical_name;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,6 +58,18 @@ class Modele
     public function setMarque(?Marque $marque): self
     {
         $this->marque = $marque;
+
+        return $this;
+    }
+
+    public function getCanonicalName(): ?string
+    {
+        return $this->canonical_name;
+    }
+
+    public function setCanonicalName(string $canonical_name): self
+    {
+        $this->canonical_name = $canonical_name;
 
         return $this;
     }
