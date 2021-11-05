@@ -62,7 +62,7 @@ class AnnonceController extends AbstractFOSRestController
      * @throws FormException
      * @return Response
      */
-    public function putAnnonceAction($id, Request $request){
+    public function putAnnonceAction($id, Request $request, Response $response){
 
         $em = $this->getDoctrine()->getManager();
         $annonce = $em->getRepository(Annonce::class)->find($id);
@@ -110,19 +110,21 @@ class AnnonceController extends AbstractFOSRestController
 
         if ($form->isSubmitted() && $form->isValid()){
             $em = $this->getDoctrine()->getManager();
-            $repository = $em->getRepository(Category::class);
+            $repository1 = $em->getRepository(Category::class);
             $modele = isset($requestBody['modele']) ?   $requestBody['modele'] : '';
-            $categorie = $repository->findOneBy(['id' =>$requestBody['category_id']]);
+            $categorie = $repository1->findOneBy(['id' =>$requestBody['category_id']]);
             //Si on affaire à la categorie Autombile et que le champ modele est renseigné, on cherche la marque associée
             if($categorie->getName() === "Automobile" && !empty($modele)) {
                $words  = preg_replace('/\s+/', '', $modele);
                $modele = new Modele();
                $m = $em->getRepository(Modele::class)->findByName($words);
-               var_dump('>>> ', $m);die();
-
+               $repository2 = $em->getRepository(Marque::class);
+               $marque =$repository2->findOneBy(['id' =>$m[0]['marque_id']]);
+               $annonce->setModele($m[0]['name']);
+               $annonce->setMarque($marque->getName());
 
             }
-            $annonce->setCategorie($categorie);
+            $annonce->setCategory($categorie);
             $em->persist($annonce);
             $em->flush();
 

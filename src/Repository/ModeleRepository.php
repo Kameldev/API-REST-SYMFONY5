@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Modele;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
  * @method Modele|null find($id, $lockMode = null, $lockVersion = null)
@@ -25,13 +26,11 @@ class ModeleRepository extends ServiceEntityRepository
     */
     public function findByName($search)
     {
-       
-        $query = $this->createQueryBuilder('SELECT * FROM modele where  LOCATE(canonical_name,:searchTerm) order by length(canonical_name) desc')
-        ->setParameter('searchTerm', $search);
-        $modele = $query->setMaxResults(1)
-            ->getQuery();
 
-        return $modele;
+        $rawSql = "SELECT * FROM modele WHERE LOCATE(canonical_name, :searchParam) = 1";
+        $stmt = $this->getEntityManager()->getConnection()->prepare($rawSql);
+        $stmt->execute(['searchParam' => $search]);
+        return $stmt->fetchAll();
 
     }
 
